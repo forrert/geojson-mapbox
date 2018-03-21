@@ -2,14 +2,13 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import MapGl from "react-map-gl";
 import Dimensions from "react-dimensions";
+import { withRouter } from "react-router-dom";
+import first from "lodash/first";
 
 import { updateViewport } from "../actions/map";
-import { addPoint } from "../actions/drawing";
+import { selectFeature } from "../actions/feature";
 import map from "../selectors/map";
 import AccessTokenForm from "../Components/AccessTokenForm";
-
-const accessToken =
-    "pk.eyJ1IjoiZm9ycmVydCIsImEiOiJjaXJ6NG9yeG4wMDB2MnlvNDR0bzM1ODR4In0.FmtJ79hkxaPnKC5gYgaQMQ";
 
 class MapComponent extends Component {
     render() {
@@ -50,14 +49,21 @@ class MapComponent extends Component {
         });
     };
 
-    _onClick = ({ lngLat }) => {
-        const { drawing, addPoint } = this.props;
-        if (drawing) {
-            addPoint(lngLat);
+    _onClick = ({ lngLat, features }) => {
+        const userFeatures = features.filter(f =>
+            f.layer.source.match(/ds-[0-9]+/)
+        );
+        const userFeature = first(userFeatures);
+        const { history, selectFeature } = this.props;
+        if (userFeature) {
+            history.push("/Feature");
+            selectFeature(userFeature.properties);
+        } else {
+            history.push("/");
         }
     };
 }
 
-const MapWithDimensions = Dimensions()(MapComponent);
+const EnhancedMap = withRouter(Dimensions()(MapComponent));
 
-export default connect(map, { updateViewport, addPoint })(MapWithDimensions);
+export default connect(map, { updateViewport, selectFeature })(EnhancedMap);

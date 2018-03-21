@@ -1,6 +1,7 @@
 import React from "react";
 import { Form, FormGroup, Label } from "reactstrap";
 import partial from "lodash/partial";
+import get from "lodash/get";
 
 import Input from "./FormComponents/Input";
 import GeoJson from "./FormComponents/GeoJson";
@@ -22,14 +23,15 @@ const Field = ({ label, prop, type, ...props }) => {
     );
 };
 
-const FormComponent = ({ onChange, fields, record, inline }) => (
+const FormComponent = ({ onChange, fields, record, inline, className }) => (
     <Form inline={inline}>
         {fields.map(f => (
             <Field
                 {...f}
                 key={f.prop}
                 onChange={partial(onChange, f.prop)}
-                value={record[f.prop]}
+                value={get(record, f.prop)}
+                className={className}
             />
         ))}
     </Form>

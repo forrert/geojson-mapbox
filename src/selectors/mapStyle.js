@@ -48,7 +48,8 @@ const getLayers = dataSource => {
                 "circle-color": dataSource.color,
                 "circle-opacity": 0.9
             },
-            filter: ["==", "$type", "Point"]
+            filter: ["==", "$type", "Point"],
+            interactive: true
         }
     ];
 };
