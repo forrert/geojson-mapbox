@@ -19,7 +19,7 @@ class FeatureDetail extends Component {
         return (
             <div>
                 <h3>Feature</h3>
-                <Button outline color="primary" onClick={this.onBack}>
+                <Button outline color="primary" onClick={this.onBack} size="sm">
                     Back
                 </Button>
                 <Form

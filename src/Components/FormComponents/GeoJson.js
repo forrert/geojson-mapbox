@@ -3,12 +3,16 @@ import CodeMirror from "react-codemirror";
 import "codemirror/lib/codemirror.css";
 import "codemirror/mode/javascript/javascript";
 
-const options = {
+const defaultOptions = {
     lineNumbers: true,
     mode: "application/json",
     smartIndent: true
 };
 
-export default ({ value, onChange }) => (
-    <CodeMirror value={value} onChange={onChange} options={options} />
+export default ({ value, onChange, options = {} }) => (
+    <CodeMirror
+        value={value}
+        onChange={onChange}
+        options={{ ...defaultOptions, ...options }}
+    />
 );

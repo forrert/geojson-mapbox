@@ -4,13 +4,33 @@ import { ListGroup, ListGroupItem } from "reactstrap";
 import map from "lodash/map";
 import pick from "lodash/pick";
 import { withRouter } from "react-router-dom";
+import Octicon from "react-component-octicons";
 
-const DataSourceItem = withRouter(({ history, label, id }) => (
-    <ListGroupItem
-        onClick={() => history.push(`/DataSources/${id}`)}
-        style={{ cursor: "pointer" }}
-    >
-        {label}
+import DataSourceActions from "./DataSourceActions";
+
+const DataSourceItem = withRouter(({ history, label, id, color }) => (
+    <ListGroupItem>
+        <span
+            onClick={() => history.push(`/DataSources/${id}`)}
+            style={{ cursor: "pointer" }}
+        >
+            <span
+                style={{
+                    padding: 5,
+                    backgroundColor: color,
+                    borderRadius: 5,
+                    textAlign: "center"
+                }}
+            >
+                <Octicon
+                    style={{ color: "white", width: 16 }}
+                    name="location"
+                />
+            </span>
+            &nbsp;
+            {label}
+        </span>
+        <DataSourceActions id={id} />
     </ListGroupItem>
 ));
 

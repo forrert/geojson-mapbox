@@ -4,22 +4,12 @@ export const DELETE_DATASOURCE = "DELETE_DATASOURCE";
 
 export const addDataSource = record => ({
     type: ADD_DATASOURCE,
-    payload: {
-        record: {
-            ...record,
-            geoJson: JSON.parse(record.geoJson)
-        }
-    }
+    payload: { record }
 });
 
 export const updateDataSource = record => ({
     type: UPDATE_DATASOURCE,
-    payload: {
-        record: {
-            ...record,
-            geoJson: JSON.parse(record.geoJson)
-        }
-    }
+    payload: { record }
 });
 
 export const deleteDataSource = id => ({

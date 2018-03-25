@@ -14,7 +14,7 @@ if (process.env.NODE_ENV === "production") {
 
 const Routes = () => {
     return (
-        <div>
+        <div style={{ height: "100%" }}>
             <Route exact path="/" component={DataSources} />
             <Route path="/DataSources/:id" component={DataSoureDetail} />
             <Route path="/Feature" component={FeatureDetail} />
