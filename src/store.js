@@ -4,6 +4,6 @@ import persistState from "redux-localstorage";
 
 import reducers from "./reducers";
 
-const enhancer = compose(applyMiddleware(), persistState());
+const enhancer = compose(applyMiddleware(logger), persistState());
 
 export default createStore(reducers, enhancer);

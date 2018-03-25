@@ -32,7 +32,7 @@ class DataSourceDetail extends Component {
                     outline
                     color="danger"
                     onClick={this.onDelete.bind(this)}
-                    label="Delete"
+                    label="delete"
                     size="sm"
                 />
                 <FormComponent
@@ -95,6 +95,15 @@ class DataSourceDetail extends Component {
                 options: map(omit(dataSources, id), ds =>
                     option(ds.id, ds.label)
                 )
+            },
+            {
+                prop: "mapLayer",
+                label: "Transform Function",
+                type: "geoJson",
+                visible: ({ type }) => type === "mapLayer",
+                options: {
+                    mode: "javascript"
+                }
             }
         ];
     }
@@ -105,7 +114,7 @@ class DataSourceDetail extends Component {
         if (id === "New") {
             addDataSource(record);
         } else {
-            updateDataSource(record);
+            updateDataSource({ id, ...this.state });
         }
         history.push("/");
     };
@@ -133,7 +142,14 @@ const mapStateToProps = (state, ownProps) => {
     }
     const record = state.dataSources[id];
     return {
-        record: { ...record, geoJson: JSON.stringify(record.geoJson, null, 2) },
+        id,
+        record: {
+            ...record,
+            geoJson:
+                record.type === "geoJson"
+                    ? JSON.stringify(record.geoJson, null, 2)
+                    : ""
+        },
         dataSources: state.dataSources
     };
 };

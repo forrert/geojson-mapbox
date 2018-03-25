@@ -1,8 +1,7 @@
-import keys from "lodash/keys";
-import max from "lodash/max";
 import omit from "lodash/omit";
 import isString from "lodash/isString";
 import * as turf from "@turf/turf";
+import uuid from "uuid/v4";
 
 import {
     ADD_DATASOURCE,
@@ -10,28 +9,31 @@ import {
     DELETE_DATASOURCE
 } from "../actions/dataSources";
 
-const getNextDatasourceId = state =>
-    max(keys(state).map(k => parseInt(k, 10) + 1)) || 1;
-
 export default {
     initialState: {},
     [ADD_DATASOURCE]: (state, { record }) => {
-        const id = getNextDatasourceId(state);
+        const id = uuid();
         return {
             ...state,
-            [id]: updateGeoJson({
-                ...record,
-                id
-            })
+            [id]: updateGeoJson(
+                {
+                    ...record,
+                    id
+                },
+                state
+            )
         };
     },
-    [UPDATE_DATASOURCE]: (state, { record }) => ({
-        ...state,
-        [record.id]: updateGeoJson({
-            ...state[record.id],
-            ...record
-        })
-    }),
+    [UPDATE_DATASOURCE]: (state, { record }) => {
+        let dataSource = { ...state[record.id], ...record };
+        if (record.geoJson || record.mapLayer) {
+            dataSource = updateGeoJson(dataSource, state);
+        }
+        return {
+            ...state,
+            [record.id]: dataSource
+        };
+    },
     [DELETE_DATASOURCE]: (state, { id }) => ({
         ...omit(state, `${id}`)
     })
@@ -57,7 +59,7 @@ function getGeoJson(dataSource, dataSources) {
         try {
             const refDataSource = dataSources[dataSource.refDataSource];
             const functionString = `return ${dataSource.mapLayer}`;
-            const fun = new Function("turf", functionString);
+            const fun = new Function("turf", functionString); // eslint-disable-line no-new-func
             const data = fun(turf)(refDataSource.geoJson);
             return data;
         } catch (e) {
